@@ -8,7 +8,5 @@ A linguagem de programação que foi usada nesse projeto foi a Python.
 Integrantes do projeto:
 
     Gabriela Alves Gomes Delavald -  197588
-    
-    João Luiz Santos Gomes -  199657
-    
+    João Luiz Santos Gomes -  199657    
     Vinícius Oliveira Martins - 206853
