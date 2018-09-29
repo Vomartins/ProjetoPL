@@ -11,25 +11,26 @@ class PL:
         self.A = np.zeros((m, n))
         self.b = np.zeros(m)
         self.I = np.eye(m)
-        self.C = 0 
+        #self.C = 0 
+        self.B = np.zeros((m, m))
         self.leitura()
     
     #Método para ler as matrizes do problema
     def leitura(self):
         print('Digite os elementos do vetor b de custos:')
         for i in range(self.n):
-            self.c[i] = int(input(f'c{i}: '))
+            self.c[i] = float(input(f'c{i}: '))
         print('\n')
 
         print('Digite os elementos da matriz A de coeficientes das restrições:')
         for i in range(self.m):
             for j in range(self.n):
-                self.A[i, j] = int(input(f'a{i+1}{j+1}: '))
+                self.A[i, j] = float(input(f'a{i+1}{j+1}: '))
             print("\n")
 
         print('Digite os elementos do vetor b das restrições:')
         for i in range(self.m):
-            self.b[i] = int(input(f'b{i}: '))
+            self.b[i] = float(input(f'b{i}: '))
         print('\n')
         
         self.__carac()
@@ -49,23 +50,30 @@ class PL:
     
     #Método para caracterizar se o problema precisa de duas fases/BigM ou ja esta pronto para o simplex.
     def __carac(self):
-        for i in range(self.n, self.m):
-            for j in range(self.n):
+        C = 0
+        for i in range(self.m):
+            for j in range((self.m-1), self.n):
                 if (self.I[:,i] == self.A[:,j]).all():                
-                    self.C += 1
+                    C += 1
+                    for k in range(self.m):
+                        self.B[k, i] = self.A[k, j]
         
-        if self.C == self.m:
+        if C == self.m:
             print(f'O seu PPL já possui uma base B igual a identidade {self.m}x{self.m}')
+            print(self.B)
         else:
             print(f'O seu PPL não possui uma base B igual a identidade {self.m}x{self.m}')
             resp = str(input('Gostaria de usar o método de duas fases[f] ou o BigM[M]?'))
             print(resp)
+            print(self.B)
 
+    '''
     def __Dfases(self):
 
     def __BigM(self):
 
     def __simplex(self):
+    '''
 
             
             
