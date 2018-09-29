@@ -3,7 +3,7 @@ import pandas as pd
 
 class PL:
     
-    #Variáveis globais da classe
+    #Atributos da classe
     def __init__ (self, n, m):        
         self.n = n
         self.m = m
@@ -24,7 +24,7 @@ class PL:
         print('Digite os elementos da matriz A de coeficientes das restrições:')
         for i in range(self.m):
             for j in range(self.n):
-                self.A[i][j] = int(input(f'a{i+1}{j+1}: '))
+                self.A[i, j] = int(input(f'a{i+1}{j+1}: '))
             print("\n")
 
         print('Digite os elementos do vetor b das restrições:')
@@ -60,6 +60,13 @@ class PL:
             print(f'O seu PPL não possui uma base B igual a identidade {self.m}x{self.m}')
             resp = str(input('Gostaria de usar o método de duas fases[f] ou o BigM[M]?'))
             print(resp)
+
+    def __Dfases(self):
+
+    def __BigM(self):
+
+    def __simplex(self):
+
             
             
         
