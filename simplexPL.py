@@ -14,7 +14,7 @@ class PL:
         self.C = 0 
         self.B = np.zeros((m, m)) #Base B
         self.vb = np.zeros(n) #Vetor de variáveis básicas
-        self.vn = np.arange(n) #Vetor de variáveis não básicas
+        self.vn = np.arange(1, n+1) #Vetor de variáveis não básicas
         self.leitura()
     
     #Método para ler as matrizes do problema
@@ -56,7 +56,7 @@ class PL:
             for j in range((self.m-1), self.n):
                 if (self.I[:,i] == self.A[:,j]).all():                
                     self.C += 1
-                    self.vb[j] = j
+                    self.vb[j] = j + 1
                     for k in range(self.m):
                         self.B[k, i] = self.A[k, j]
         self.vn = self.vn - self.vb
@@ -67,6 +67,8 @@ class PL:
             print('\n')
             print(self.vb)
             print(self.vn)
+            self.vn = np.array([l for l in self.vn if l != 0])
+            self.vb = np.array([l for l in self.vb if l != 0])
         else:
             print(f'O seu PPL não possui uma base B (igual a identidade {self.m}x{self.m}) factível.')
             resp = str(input('Gostaria de usar o método de duas fases[f] ou o BigM[M]? '))
