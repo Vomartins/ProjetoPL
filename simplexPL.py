@@ -4,10 +4,10 @@ import pandas as pd
 class PL:
     
     #Atributos da classe
-    def __init__ (self, n, m, o):        
+    def __init__ (self, n, m):        
         self.n = n #Qnt de variáveis
         self.m = m #Qnt de restrições
-        self.o = o #Qnt de variáveis originais
+        self.o = n-m #Qnt de variáveis originais
         self.c = np.zeros(n) #Vetor custo
         self.cb = np.zeros(m) #Vetor de custo básico
         self.cn = np.zeros(n-m) #Vetor de custo não básico
@@ -112,10 +112,17 @@ class PL:
 
             if (self.r >= 0).all():
                 print('A solução foi encontrada')
-                print(xb)
-                print(self.vb)
-                print(self.vn)
-                break
+                if (xb != 0).all():
+                    print(xb)
+                    print(self.vb)
+                    print(self.vn)
+                    break
+                else: 
+                    print("A solução é degenerada, a restrição relacionada a variável ...")
+                    print(xb)
+                    print(self.vb)
+                    print(self.vn)
+                    break
             else:
                 a = self.vn[np.argmin(self.r)]
                 print(a)
