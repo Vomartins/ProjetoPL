@@ -18,7 +18,7 @@ class PL:
         self.B = np.zeros((m, m)) #Base B
         self.vb = np.zeros(n) #Vetor de variáveis básicas
         self.vn = np.arange(1, n+1) #Vetor de variáveis não básicas
-        self.r = np.zeros(m) #Vetor de custos reduzidos
+        self.r = np.zeros(n-m) #Vetor de custos reduzidos
         self.E = np.zeros(m) #Vetor de tamanho de passo
         self.leitura()
     
@@ -97,9 +97,9 @@ class PL:
             print(f'Iteração: {k}')
             
             xb = np.linalg.solve(self.B, self.b)
-            print(xb)
+            print(f'xb = {xb}')
             lb = np.linalg.solve(self.B.transpose(), self.cb)
-            print(lb)
+            print(f'lb = {lb}')
 
             #r = np.ones(self.n)
 
@@ -108,29 +108,48 @@ class PL:
 
             #r = np.array([l for l in r if l != 0])
 
-            print(self.r)
+            print(f'r = {self.r}')
 
             if (self.r >= 0).all():
                 print('A solução foi encontrada')
-                if (xb != 0).all():
-                    print(xb)
-                    print(self.vb)
-                    print(self.vn)
+                
+                if(self.r > 0).all():
+                    for i in range(self.m):
+                        if (xb[i] == 0 and self.vb[i] > self.o) :
+                            print(f'A solução é degenerada, a restrição relacionada a variável x{int(self.vb[i])} é redundante.')
+                            print(f'xb = {xb}')
+                            print(f'vb = {self.vb}')
+                            print(f'vn = {self.vn}')
+                            break
                     break
-                else: 
-                    print("A solução é degenerada, a restrição relacionada a variável ...")
-                    print(xb)
-                    print(self.vb)
-                    print(self.vn)
+                    if (xb != 0).all():
+                        print(f'xb = {xb}')
+                        print(f'vb = {self.vb}')
+                        print(f'vn = {self.vn}')
+                        break
+                else:
+                    print("Há infinitas soluções limitadas")
+                    print(f'xb = {xb}')
+                    print(f'vb = {self.vb}')
+                    print(f'vn = {self.vn}')
                     break
+                    
+                
             else:
                 a = self.vn[np.argmin(self.r)]
-                print(a)
+                print(f'Variável que entra : {a}')
 
             a = int(a)
             d = np.linalg.solve(self.B, self.A[:, a-1])
-            print(d)
-
+            print(f'direção = {d}')
+            
+            if (d <= 0).all():
+                print("A solução é ilimitada")
+                print(f'xb = {xb}')
+                print(f'vb = {self.vb}')
+                print(f'vn = {self.vn}')
+                break
+                
             E = np.zeros(self.m)
             for i in range(self.m):
                 if d[i] > 0:
@@ -142,8 +161,8 @@ class PL:
 
             b = self.vb[np.argmin(E)]
 
-            print(E)
-            print(b)
+            print(f'passo = {E}')
+            print(f'Variável que sai: {b}')
 
             for i in range(self.m):
                 if self.vb[i] == b:
@@ -157,16 +176,16 @@ class PL:
             for i in range(self.o):
                 self.cn[i] = self.c[int(self.vn[i])-1]
 
-            print(self.vb)
-            print(self.cb)
-            print(self.vn)
-            print(self.cn)
+            print(f'vb = {self.vb}')
+            print(f'cb = {self.cb}')
+            print(f'vn = {self.vn}')
+            print(f'cn = {self.cn}')
 
             for j in range(self.m):
                 for i in range(self.m):
                     self.B[i, j] = self.A[i, int(self.vb[j])-1]
 
-            print(self.B)
+            print(f'B = {self.B}')
             print('\n')
             k += 1
         
