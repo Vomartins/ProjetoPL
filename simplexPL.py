@@ -116,7 +116,7 @@ class PL:
                 if(self.r > 0).all():
                     for i in range(self.m):
                         if (xb[i] == 0 and self.vb[i] > self.o) :
-                            print(f'A solução é degenerada, a restrição relacionada a variável x{int(self.vb[i])} é redundante.')
+                            print(f'A solução é degenerada.')
                             print(f'xb = {xb}')
                             print(f'vb = {self.vb}')
                             print(f'vn = {self.vn}')
