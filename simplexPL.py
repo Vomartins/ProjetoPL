@@ -5,14 +5,16 @@ class PL:
     
     #Atributos da classe
     def __init__ (self, n, m):        
-        self.n = n
-        self.m = m
-        self.c = np.zeros(n)
-        self.A = np.zeros((m, n))
-        self.b = np.zeros(m)
-        self.I = np.eye(m)
-        #self.C = 0 
-        self.B = np.zeros((m, m))
+        self.n = n #Qnt de variáveis
+        self.m = m #Qnt de restrições
+        self.c = np.zeros(n) #Vetor custo
+        self.A = np.zeros((m, n)) #Matriz de coeficientes
+        self.b = np.zeros(m) #Vetor de restrições
+        self.I = np.eye(m) #Matriz identidade caracteristica da base B
+        self.C = 0 
+        self.B = np.zeros((m, m)) #Base B
+        self.vb = np.zeros(n) #Vetor de variáveis básicas
+        self.vn = np.arange(n) #Vetor de variáveis não básicas
         self.leitura()
     
     #Método para ler as matrizes do problema
@@ -50,29 +52,36 @@ class PL:
     
     #Método para caracterizar se o problema precisa de duas fases/BigM ou ja esta pronto para o simplex.
     def __carac(self):
-        C = 0
         for i in range(self.m):
             for j in range((self.m-1), self.n):
                 if (self.I[:,i] == self.A[:,j]).all():                
-                    C += 1
+                    self.C += 1
+                    self.vb[j] = j
                     for k in range(self.m):
                         self.B[k, i] = self.A[k, j]
-        
-        if C == self.m:
-            print(f'O seu PPL já possui uma base B igual a identidade {self.m}x{self.m}')
+        self.vn = self.vn - self.vb
+                        
+        if self.C == self.m:
+            print(f'O seu PPL já possui uma base B (igual a identidade {self.m}x{self.m}) factível.')
             print(self.B)
+            print('\n')
+            print(self.vb)
+            print(self.vn)
         else:
-            print(f'O seu PPL não possui uma base B igual a identidade {self.m}x{self.m}')
-            resp = str(input('Gostaria de usar o método de duas fases[f] ou o BigM[M]?'))
+            print(f'O seu PPL não possui uma base B (igual a identidade {self.m}x{self.m}) factível.')
+            resp = str(input('Gostaria de usar o método de duas fases[f] ou o BigM[M]? '))
             print(resp)
             print(self.B)
-
+            print('\n')
+            print(self.vb)
+            print(self.vn)
+            
+    #def __Simplex(self):
+        
     '''
-    def __Dfases(self):
+    def __DuasFases(self):
 
     def __BigM(self):
-
-    def __simplex(self):
     '''
 
             
