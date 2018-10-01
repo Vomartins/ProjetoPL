@@ -68,10 +68,10 @@ class PL:
                         
         if self.C == self.m:
             print(f'O seu PPL já possui uma base B (igual a identidade {self.m}x{self.m}) factível.')
-            #print(self.B)
+            print(self.B)
             print('\n')
-            #print(self.vb)
-            #print(self.vn)
+            print(self.vb)
+            print(self.vn)
             self.vn = np.array([l for l in self.vn if l != 0])
             self.vb = np.array([l for l in self.vb if l != 0])
             for i in range(self.m):
@@ -91,7 +91,8 @@ class PL:
             print(self.vb)
             print(self.vn)
             
-    def __Simplex(self):
+    def Simplex(self):
+                      
         k = 1
         while k <= np.exp(self.m): 
             print(f'Iteração: {k}')
@@ -110,18 +111,18 @@ class PL:
 
             print(f'r = {self.r}')
 
-            if (self.r >= 0).all():
+            if (np.min(self.r) >= 0):
                 print('A solução foi encontrada')
                 
-                if(self.r > 0).all():
+                if(np.min(self.r) > 0):
                     for i in range(self.m):
                         if (xb[i] == 0 and self.vb[i] > self.o) :
                             print(f'A solução é degenerada.')
                             print(f'xb = {xb}')
                             print(f'vb = {self.vb}')
                             print(f'vn = {self.vn}')
-                            break
-                    break
+                            exit()
+                            
                     if (xb != 0).all():
                         print(f'xb = {xb}')
                         print(f'vb = {self.vb}')
