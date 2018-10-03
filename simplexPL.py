@@ -149,13 +149,13 @@ class PL:
                     d = np.linalg.solve(self.__B, self.__A[:, a-1])
                     print('Direção Simplex: d = {}'.format(d))
                     if (d <= 0).all():
-                        print("A solução é ilimitada!")
+                        print("Há um raio ótimo")
                         print('Solução Básica Factível: Xb = {}'.format(xb))
                         print('Vetor Básico: Vb =  {}'.format(self.__vb))
                         print('Vetor Não-Básico: Vn = {}'.format(self.__vn))
                         print('Valor da Função Objetivo: F(x) = {}'.format(z))
                         break
-                    print("Há infinitas soluções limitadas")
+                    print("Há infinitas soluções ótimas limitadas")
                     print('Solução Básica Factível: Xb = {}'.format(xb))
                     print('Vetor Básico: Vb =  {}'.format(self.__vb))
                     print('Vetor Não-Básico: Vn = {}'.format(self.__vn))
@@ -172,7 +172,7 @@ class PL:
             print('Direção Simplex: d = {}'.format(d))
             
             if (d <= 0).all():
-                print("A solução é ilimitada!")
+                print("A solução ótima é ilimitada!")
                 print('Solução Básica Factível: Xb = {}'.format(xb))
                 print('Vetor Básico: Vb =  {}'.format(self.__vb))
                 print('Vetor Não-Básico: Vn = {}'.format(self.__vn))
