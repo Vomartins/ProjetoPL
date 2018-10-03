@@ -121,8 +121,11 @@ class PL:
                             print(f'xb = {xb}')
                             print(f'vb = {self.vb}')
                             print(f'vn = {self.vn}')
-                            exit()
-                            
+                            break
+                    print(f'xb = {xb}')
+                    print(f'vb = {self.vb}')
+                    print(f'vn = {self.vn}')
+                    break                            
                     if (xb != 0).all():
                         print(f'xb = {xb}')
                         print(f'vb = {self.vb}')
