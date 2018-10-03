@@ -231,6 +231,9 @@ class PL:
         
         self.__Simplex()
         
+        if np.max(self.vb) >= pl.n + 1:
+            print(f'O problema é infactível')
+        
     '''
     def __DuasFases(self):
 
