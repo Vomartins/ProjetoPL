@@ -44,16 +44,16 @@ class PL:
     
     #Métodos que mostram as matrizes do problema em forma de dataframe. Melhorar a visualização.
     def imprimeA(self):
-        dfA = pd.DataFrame(self.__A)
-        print(dfA)
-    
+        dfA = pd.DataFrame(self.__A, columns=['A'+ str(i) for i in range(1,self.__n+1)], index=['Restrição '+ str(i) for i in range(1,self.__m+1)])
+        return dfA
+  
     def imprimeb(self):
-        dfb = pd.DataFrame(self.__b)
-        print(dfb)
+        dfb = pd.DataFrame(np.transpose(self.__b),columns=None, index=['Restrição '+ str(i) for i in range(1,self.__m+1)])
+        return dfb
 
     def imprimec(self):
-        dfc = pd.DataFrame(self.__c)
-        print(dfc)
+        dfc = pd.DataFrame(np.transpose(self.__c), index=['c'+ str(i) for i in range(1,self.__n+1)])
+        return dfc
     
     #Método para caracterizar se o problema precisa de duas fases/BigM ou ja esta pronto para o simplex.
     def __carac(self):
@@ -68,10 +68,10 @@ class PL:
                         
         if self.__C == self.__m:
             print(f'O seu PPL já possui uma base B (igual a identidade {self.__m}x{self.__m}) factível.')
-            print(self.__B)
+            print('Partição Básica: B = {}'.format(self.__B))
             print('\n')
-            print(self.__vb)
-            print(self.__vn)
+            print('Vetor Básico: Vb =  {}'.format(self.__vb))
+            print('Vetor Não-Básico: Vn = {}'.format(self.__vn))
             self.__vn = np.array([l for l in self.__vn if l != 0])
             self.__vb = np.array([l for l in self.__vb if l != 0])
             for i in range(self.__m):
@@ -83,28 +83,27 @@ class PL:
             #print('\n')
             self.__Simplex()
         else:
-            print(f'O seu PPL não possui uma base B (igual a identidade {self.__m}x{self.__m}) factível.')
+            print(f'O seu PPL não possui uma base B igual a identidade {self.__m}x{self.__m}) factível.')
             print('Portanto é necessário usar o método BigM')
-            print(self.__B)
-            print('\n')
-            print(self.__vb)
-            print(self.__vn)
+            print('Partição Básica: B = {}'.format(self__B))
+            print('Vetor Básico: Vb =  {}'.format(self.__vb))
+            print('Vetor Não-Básico: Vn = {}'.format(self.__vn))
             print('\n')
             self.__BigM()
                 
     #Método do método Simplex.        
     def __Simplex(self):
-                      
+        print('\n')              
         k = 1
         while k <= np.exp(self.__m): 
             print(f'Iteração: {k}')
             
             xb = np.linalg.solve(self.__B, self.__b)
-            print(f'xb = {xb}')
+            print('Solução Básica Factível: Xb = {}'.format(xb))
             z = np.inner(self.__cb, xb)
-            print(f'z: {z}')
+            print('Valor da Função Objetivo: F(x) = {}'.format(z))
             lb = np.linalg.solve(self.__B.transpose(), self.__cb)
-            print(f'lb = {lb}')
+            print('Valor do Multplicador Simplex: Lb = {}'.format(lb))
 
             #r = np.ones(self.n)
 
@@ -116,51 +115,44 @@ class PL:
             print(f'r = {self.__r}')
 
             if (np.min(self.__r) >= 0):
-                print('A solução foi encontrada')
+                print('A solução para o problema foi encontrada!\n')
                 
                 if(np.min(self.__r) > 0):
                     for i in range(self.__m):
                         if (xb[i] == 0 and self.__vb[i] > self.__o) :
-                            print(f'A solução é degenerada.')
-                            print(f'xb = {xb}')
-                            print(f'vb = {self.__vb}')
-                            print(f'vn = {self.__vn}')
-                            print(f'Valor da função objetivo: {z}')
+                            print(f'A solução é DEGENERADA')
+                            print('Solução Básica Factível: Xb = {}'.format(xb))
+                            print('Vetor Básico: Vb =  {}'.format(self.__vb))
+                            print('Vetor Não-Básico: Vn = {}'.format(self.__vn))
+                            print('Valor da Função Objetivo: F(x) = {}'.format(z))
                             break
-                    print(f'xb = {xb}')
-                    print(f'vb = {self.__vb}')
-                    print(f'vn = {self.__vn}')
-                    print(f'Valor da função objetivo: {z}')
+                    print('Solução Básica Factível: Xb = {}'.format(xb))
+                    print('Vetor Básico: Vb =  {}'.format(self.__vb))
+                    print('Vetor Não-Básico: Vn = {}'.format(self.__vn))
+                    print('Valor da Função Objetivo: F(x) = {}'.format(z))
                     break                            
                     if (xb != 0).all():
-                        print(f'xb = {xb}')
-                        print(f'vb = {self.__vb}')
-                        print(f'vn = {self.__vn}')
-                        print(f'Valor da função objetivo: {z}')
+                        print('Solução Básica Factível: Xb = {}'.format(xb))
+                        print('Vetor Básico: Vb =  {}'.format(self.__vb))
+                        print('Vetor Não-Básico: Vn = {}'.format(self.__vn))
+                        print('Valor da Função Objetivo: F(x) = {}'.format(z))
                         break
                 else:
                     print("Há infinitas soluções limitadas")
-                    print(f'xb = {xb}')
-                    print(f'vb = {self.__vb}')
-                    print(f'vn = {self.__vn}')
-                    print(f'Valor da função objetivo: {z}')
+                    print('Valor da Função Objetivo: F(x) = {}'.format(z))
                     break
                     
                 
             else:
                 a = self.__vn[np.argmin(self.__r)]
-                print(f'Variável que entra : {a}')
+                print('Vetor que entra na Base: x{}'.format(int(a)))
 
             a = int(a)
             d = np.linalg.solve(self.__B, self.__A[:, a-1])
-            print(f'direção = {d}')
+            print('Direção Simplex: d = {}'.format(d))
             
             if (d <= 0).all():
-                print("A solução é ilimitada")
-                print(f'xb = {xb}')
-                print(f'vb = {self.__vb}')
-                print(f'vn = {self.__vn}')
-                print(f'Valor da função objetivo: {z}')
+                print("A solução é ilimitada!")
                 break
                 
             E = np.zeros(self.__m)
@@ -174,8 +166,8 @@ class PL:
 
             b = self.__vb[np.argmin(E)]
 
-            print(f'passo = {E}')
-            print(f'Variável que sai: {b}')
+            print('Tamanho do Passo Simplex: Ê = {}'.format(E))
+            print('Vetor que sai da Base: x{}'.format(int(b)))
 
             for i in range(self.__m):
                 if self.__vb[i] == b:
@@ -189,16 +181,16 @@ class PL:
             for i in range(self.__o):
                 self.__cn[i] = self.__c[int(self.__vn[i])-1]
 
-            print(f'vb = {self.__vb}')
-            print(f'cb = {self.__cb}')
-            print(f'vn = {self.__vn}')
-            print(f'cn = {self.__cn}')
+            print('Vetor Básico: Vb =  {}'.format(self.__vb))
+            print('Custo Básico: Cb = {}'.format(self.__cb))
+            print('Vetor Não-Básico: Vn = {}'.format(self.__vn))
+            print('Custo Não-Básico: Cn = {}'.format(self.__cn))
 
             for j in range(self.__m):
                 for i in range(self.__m):
                     self.__B[i, j] = self.__A[i, int(self.__vb[j])-1]
 
-            print(f'B = {self.__B}')
+            print('Partição Básica: B = {}'.format(self.__B))
             print('\n')
             k += 1
             
@@ -232,6 +224,6 @@ class PL:
         self.__Simplex()
         
         if np.max(self.__vb) >= self.__n + 1:
-            print(f'O problema é infactível')        
+            print('O problema é INFACTÍVEL!')        
             
         
