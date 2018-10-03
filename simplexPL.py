@@ -90,8 +90,11 @@ class PL:
             print('\n')
             print(self.vb)
             print(self.vn)
+            print('\n')
+            if resp == "M":
+                self.__BigM()
             
-    def Simplex(self):
+    def __Simplex(self):
                       
         k = 1
         while k <= np.exp(self.m): 
@@ -99,6 +102,8 @@ class PL:
             
             xb = np.linalg.solve(self.B, self.b)
             print(f'xb = {xb}')
+            z = np.inner(self.cb, xb)
+            print(f'z: {z}')
             lb = np.linalg.solve(self.B.transpose(), self.cb)
             print(f'lb = {lb}')
 
@@ -121,21 +126,25 @@ class PL:
                             print(f'xb = {xb}')
                             print(f'vb = {self.vb}')
                             print(f'vn = {self.vn}')
+                            print(f'Valor da função objetivo: {z}')
                             break
                     print(f'xb = {xb}')
                     print(f'vb = {self.vb}')
                     print(f'vn = {self.vn}')
+                    print(f'Valor da função objetivo: {z}')
                     break                            
                     if (xb != 0).all():
                         print(f'xb = {xb}')
                         print(f'vb = {self.vb}')
                         print(f'vn = {self.vn}')
+                        print(f'Valor da função objetivo: {z}')
                         break
                 else:
                     print("Há infinitas soluções limitadas")
                     print(f'xb = {xb}')
                     print(f'vb = {self.vb}')
                     print(f'vn = {self.vn}')
+                    print(f'Valor da função objetivo: {z}')
                     break
                     
                 
@@ -152,6 +161,7 @@ class PL:
                 print(f'xb = {xb}')
                 print(f'vb = {self.vb}')
                 print(f'vn = {self.vn}')
+                print(f'Valor da função objetivo: {z}')
                 break
                 
             E = np.zeros(self.m)
@@ -192,11 +202,38 @@ class PL:
             print(f'B = {self.B}')
             print('\n')
             k += 1
+      
+    def __BigM(self):
+        
+        W = self.I - self.B
+        self.B = np.append(self.B, W, axis=1)
+        W = np.transpose(np.array([W[:,l] for l in range(self.m) if (W[:, l] != np.zeros((self.m,1))).any()]))
+        self.B = np.transpose(np.array([self.B[:,l] for l in range(self.n) if (self.B[:, l] != np.zeros((self.m,1))).any()]))
+        self.A = np.append(self.A, W, axis=1)
+        self.vb = np.append(self.vb, np.arange(self.n + 1, self.n + self.m - self.C + 1))
+        self.vn = np.append(self.vn, np.zeros((1, self.m - self.C)))
+        
+        M = np.exp(np.max(self.c))
+        
+        self.c = np.append(self.c, np.zeros((1, self.m - self.C)))
+        for i in range(self.n + self.m - self.C):
+            if i >= self.n:
+                self.c[i] = M
+        self.vb = np.array([l for l in self.vb if l != 0])
+        for i in range(self.m):
+            self.cb[i] = self.c[int(self.vb[i])-1]
+        self.cn = np.append(self.cn, np.zeros((1, self.m - self.C)))
+        self.vn = np.array([l for l in self.vn if l != 0])
+        for i in range(self.n - self.C):
+            self.cn[i] = self.c[int(self.vn[i])-1]
+        self.r = np.append(self.r, np.zeros((1, self.m - self.C)))
+        self.o = self.n - self.C
+        
+        self.__Simplex()
         
     '''
     def __DuasFases(self):
 
-    def __BigM(self):
     '''
 
             
