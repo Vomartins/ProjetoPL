@@ -5,25 +5,25 @@ class PL:
     
     #Atributos da classe
     def __init__ (self, n, m, o):        
-        self.n = n #Qnt de variáveis
-        self.m = m #Qnt de restrições
-        self.o = o #Qnt de variáveis originais
-        self.c = np.zeros(n) #Vetor custo
-        self.cb = np.zeros(m) #Vetor de custo básico
-        self.cn = np.zeros(n-m) #Vetor de custo não básico
-        self.A = np.zeros((m, n)) #Matriz de coeficientes
-        self.b = np.zeros(m) #Vetor de restrições
-        self.I = np.eye(m) #Matriz identidade caracteristica da base B
-        self.C = 0 
-        self.B = np.zeros((m, m)) #Base B
-        self.vb = np.zeros(n) #Vetor de variáveis básicas
-        self.vn = np.arange(1, n+1) #Vetor de variáveis não básicas
-        self.r = np.zeros(n-m) #Vetor de custos reduzidos
-        self.E = np.zeros(m) #Vetor de tamanho de passo
-        self.leitura()
+        self.__n = n #Qnt de variáveis
+        self.__m = m #Qnt de restrições
+        self.__o = o #Qnt de variáveis originais
+        self.__c = np.zeros(n) #Vetor custo
+        self.__cb = np.zeros(m) #Vetor de custo básico
+        self.__cn = np.zeros(n-m) #Vetor de custo não básico
+        self.__A = np.zeros((m, n)) #Matriz de coeficientes
+        self.__b = np.zeros(m) #Vetor de restrições
+        self.__I = np.eye(m) #Matriz identidade caracteristica da base B
+        self.__C = 0 
+        self.__B = np.zeros((m, m)) #Base B
+        self.__vb = np.zeros(n) #Vetor de variáveis básicas
+        self.__vn = np.arange(1, n+1) #Vetor de variáveis não básicas
+        self.__r = np.zeros(n-m) #Vetor de custos reduzidos
+        self.__E = np.zeros(m) #Vetor de tamanho de passo
+        self.__leitura()
     
     #Método para ler as matrizes do problema
-    def leitura(self):
+    def __leitura(self):
         print('Digite os elementos do vetor c de custos:')
         for i in range(self.n):
             self.c[i] = float(input(f'c{i+1}: '))
@@ -84,16 +84,15 @@ class PL:
             self.__Simplex()
         else:
             print(f'O seu PPL não possui uma base B (igual a identidade {self.m}x{self.m}) factível.')
-            resp = str(input('Gostaria de usar o método de duas fases[f] ou o BigM[M]? '))
-            print(resp)
+            print('Portanto é necessário usar o método BigM')
             print(self.B)
             print('\n')
             print(self.vb)
             print(self.vn)
             print('\n')
-            if resp == "M":
-                self.__BigM()
-            
+            self.__BigM()
+                
+    #Método do método Simplex.        
     def __Simplex(self):
                       
         k = 1
@@ -202,7 +201,8 @@ class PL:
             print(f'B = {self.B}')
             print('\n')
             k += 1
-      
+            
+    #Método do método BigM, basicamente ele reformula o problema para os moldes do BigM e chama o método Simplex em seguida.  
     def __BigM(self):
         
         W = self.I - self.B
@@ -232,13 +232,6 @@ class PL:
         self.__Simplex()
         
         if np.max(self.vb) >= pl.n + 1:
-            print(f'O problema é infactível')
-        
-    '''
-    def __DuasFases(self):
-
-    '''
-
-            
+            print(f'O problema é infactível')        
             
         
