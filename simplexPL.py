@@ -40,9 +40,13 @@ class PL:
             self.__b[i] = float(input(f'b{i+1}: '))
         print('\n')
         
+        self.imprimeA()
+        self.imprimeb()
+        self.imprimec()
+        print('\n')
         self.__carac()
     
-    #Métodos que mostram as matrizes do problema em forma de dataframe. Melhorar a visualização.
+    #Métodos que mostram as matrizes do problema em forma de dataframe.
     def imprimeA(self):
         dfA = pd.DataFrame(self.__A, columns=['A'+ str(i) for i in range(1,self.__n+1)], index=['Restrição '+ str(i) for i in range(1,self.__m+1)])
         return dfA
@@ -85,7 +89,7 @@ class PL:
         else:
             print(f'O seu PPL não possui uma base B igual a identidade {self.__m}x{self.__m}) factível.')
             print('Portanto é necessário usar o método BigM')
-            print('Partição Básica: B = {}'.format(self__B))
+            print('Partição Básica: B = {}'.format(self.__B))
             print('Vetor Básico: Vb =  {}'.format(self.__vb))
             print('Vetor Não-Básico: Vn = {}'.format(self.__vn))
             print('\n')
@@ -138,7 +142,23 @@ class PL:
                         print('Valor da Função Objetivo: F(x) = {}'.format(z))
                         break
                 else:
+                    
+                    a = self.__vn[np.argmin(self.__r)]
+                    print('Vetor que entra na Base: x{}'.format(int(a)))
+                    a = int(a)
+                    d = np.linalg.solve(self.__B, self.__A[:, a-1])
+                    print('Direção Simplex: d = {}'.format(d))
+                    if (d <= 0).all():
+                        print("A solução é ilimitada!")
+                        print('Solução Básica Factível: Xb = {}'.format(xb))
+                        print('Vetor Básico: Vb =  {}'.format(self.__vb))
+                        print('Vetor Não-Básico: Vn = {}'.format(self.__vn))
+                        print('Valor da Função Objetivo: F(x) = {}'.format(z))
+                        break
                     print("Há infinitas soluções limitadas")
+                    print('Solução Básica Factível: Xb = {}'.format(xb))
+                    print('Vetor Básico: Vb =  {}'.format(self.__vb))
+                    print('Vetor Não-Básico: Vn = {}'.format(self.__vn))
                     print('Valor da Função Objetivo: F(x) = {}'.format(z))
                     break
                     
@@ -153,6 +173,10 @@ class PL:
             
             if (d <= 0).all():
                 print("A solução é ilimitada!")
+                print('Solução Básica Factível: Xb = {}'.format(xb))
+                print('Vetor Básico: Vb =  {}'.format(self.__vb))
+                print('Vetor Não-Básico: Vn = {}'.format(self.__vn))
+                print('Valor da Função Objetivo: F(x) = {}'.format(z))
                 break
                 
             E = np.zeros(self.__m)
