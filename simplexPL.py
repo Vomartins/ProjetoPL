@@ -4,10 +4,10 @@ import pandas as pd
 class PL:
     
     #Atributos da classe
-    def __init__ (self, n, m, o):        
+    def __init__ (self, n, m):        
         self.__n = n #Qnt de variáveis
         self.__m = m #Qnt de restrições
-        self.__o = o #Qnt de variáveis originais
+        self.__o = n-m #Qnt de variáveis originais
         self.__c = np.zeros(n) #Vetor custo
         self.__cb = np.zeros(m) #Vetor de custo básico
         self.__cn = np.zeros(n-m) #Vetor de custo não básico
