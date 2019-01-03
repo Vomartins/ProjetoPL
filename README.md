@@ -1,5 +1,5 @@
 # ProjetoPL
-Primeiro projeto computacional de programação linear. MS428 - Primeiro semestre de 2018, Unicamp
+Primeiro projeto computacional de programação linear. MS428 - Segundo semestre de 2018, Unicamp
 
 O projeto consiste em implementar o algoritmo do método primal simplex para resolver um problema de programação linear (PPL) na forma padrão.
 
